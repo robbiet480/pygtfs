@@ -3,6 +3,7 @@ from __future__ import (division, absolute_import, print_function,
 
 import sqlalchemy
 import sqlalchemy.orm
+from sqlalchemy.pool import StaticPool
 
 from .gtfs_entities import gtfs_all, Feed, Base
 
@@ -32,7 +33,7 @@ class Schedule:
             self.db_connection = 'sqlite:///%s' % self.db_connection
         if self.db_connection.startswith('sqlite'):
             self.db_filename = self.db_connection
-        self.engine = sqlalchemy.create_engine(self.db_connection, echo=False)
+        self.engine = sqlalchemy.create_engine(self.db_connection, echo=False, connect_args={'check_same_thread': False}, poolclass=StaticPool)
         Session = sqlalchemy.orm.sessionmaker(bind=self.engine)
         self.session = Session()
         Base.metadata.create_all(self.engine)
@@ -69,4 +70,4 @@ for entity in (gtfs_all + [Feed]):
     entity_by_id_doc = "A list of :py:class:`pygtfs.gtfs_entities.{0}` objects with matching id".format(entity.__name__)
     setattr(Schedule, entity._plural_name_, _meta_query_all(entity, entity_doc))
     if hasattr(entity, 'id'):
-        setattr(Schedule, entity._plural_name_ + "_by_id", _meta_query_by_id(entity, entity_by_id_doc))    
+        setattr(Schedule, entity._plural_name_ + "_by_id", _meta_query_by_id(entity, entity_by_id_doc))

@@ -9,6 +9,7 @@ with codecs.open(readme, encoding='utf-8') as f:
 
 setup(
     name='pygtfs',
+    version="0.1.3",
     author='Yaron de Leeuw',
     author_email="me@jarondl.net",
     description='Models GTFS data in a database.',
@@ -24,8 +25,6 @@ setup(
                       ],
     tests_require=['nose'],
     test_suite='nose.collector',
-    setup_requires=['setuptools_scm'],
-    use_scm_version={'write_to': os.path.join('pygtfs', '_version.py')},
     entry_points={'console_scripts': ['gtfs2db = pygtfs.gtfs2db:main']},
     classifiers=[
         "Operating System :: OS Independent",
